@@ -11,17 +11,17 @@ export class Dinheiro {
     return new Dinheiro(0, moeda);
   }
 
-  static menorUnidade(valor: number, moeda: Moeda): Dinheiro {
+  static fromLowerUnit(valor: number, moeda: Moeda): Dinheiro {
     if (valor < 0) throw new TypeError('Valor não pode ser negativo.');
 
     return new Dinheiro(valor, moeda);
   }
 
-  static unidadeVerificada(valor: number, moeda: Moeda): Dinheiro {
+  static fromSignedUnit(valor: number, moeda: Moeda): Dinheiro {
     return new Dinheiro(valor, moeda);
   }
 
-  static decimal(valor: string, moeda: Moeda): Dinheiro {
+  static fromDecimal(valor: string, moeda: Moeda): Dinheiro {
     const ajustado = valor.trim().replace(',', '.');
     if (!/^-?\d+(\.\d{1,2})?$/.test(ajustado))
       throw new DomainError(`Valor monetario inválido: ${valor}`);
@@ -32,15 +32,15 @@ export class Dinheiro {
     const fracaoDeslocada = fracao.padEnd(2, '0').slice(0, 2);
     const menorUnidade = Number.parseInt(todo + fracaoDeslocada);
     return negativo
-      ? new Dinheiro(menorUnidade, moeda).negado()
+      ? new Dinheiro(menorUnidade, moeda).negate()
       : new Dinheiro(menorUnidade, moeda);
   }
 
-  get getValor(): number {
+  getValor(): number {
     return this.valor;
   }
 
-  get getMoeda(): Moeda {
+  getMoeda(): Moeda {
     return this.moeda;
   }
 
@@ -48,35 +48,35 @@ export class Dinheiro {
     return this.valor === 0;
   }
 
-  isNegativo(): boolean {
+  isNegative(): boolean {
     return this.valor < 0;
   }
 
-  isPositivo(): boolean {
+  isPositive(): boolean {
     return this.valor > 0;
   }
 
-  negado(): Dinheiro {
+  negate(): Dinheiro {
     return new Dinheiro(-this.valor, this.moeda);
   }
 
   abs(): Dinheiro {
-    return this.valor < 0 ? this.negado() : this;
+    return this.valor < 0 ? this.negate() : this;
   }
 
-  adicionar(outro: Dinheiro): Dinheiro {
-    this.validacaoMesmoValor(outro);
+  add(outro: Dinheiro): Dinheiro {
+    this.assertMesmaMoeda(outro);
 
     return new Dinheiro(this.valor + outro.valor, this.moeda);
   }
 
-  subtrair(outro: Dinheiro): Dinheiro {
-    this.validacaoMesmoValor(outro);
+  subtract(outro: Dinheiro): Dinheiro {
+    this.assertMesmaMoeda(outro);
 
     return new Dinheiro(this.valor - outro.valor, this.moeda);
   }
 
-  multiplicar(fator: number): Dinheiro {
+  multiply(fator: number): Dinheiro {
     if (!Number.isFinite(fator))
       throw new DomainError('Fator deve ser um número finito.');
 
@@ -86,7 +86,7 @@ export class Dinheiro {
     return new Dinheiro(arredontado, this.moeda);
   }
 
-  dividir(divisor: number): Dinheiro {
+  divide(divisor: number): Dinheiro {
     if (divisor === 0) throw new DomainError('Não pode dividir por 0.');
 
     const escala = Number(this.valor) / divisor;
@@ -99,7 +99,29 @@ export class Dinheiro {
     return this.valor === outro.valor && this.moeda.equals(outro.moeda);
   }
 
-  private validacaoMesmoValor(outro: Dinheiro): void {
+  isGreaterThan(outro: Dinheiro): boolean {
+    this.assertMesmaMoeda(outro);
+
+    return this.valor > outro.valor;
+  }
+
+  isLessThan(outro: Dinheiro): boolean {
+    this.assertMesmaMoeda(outro);
+
+    return this.valor < outro.valor;
+  }
+
+  toDecimalString(): string {
+    const negativo = this.valor < 0;
+    const abs = negativo ? -this.valor : this.valor;
+    const str = abs.toString().padStart(3, '0');
+    const total = str.slice(0, -2) || '0';
+    const fracao = str.slice(-2);
+
+    return negativo ? `-${total}.${fracao}` : `${total}.${fracao}`;
+  }
+
+  private assertMesmaMoeda(outro: Dinheiro): void {
     if (!this.moeda.equals(outro.moeda))
       throw new DomainError('Não pode calcular 2 moedas distintas.');
   }
