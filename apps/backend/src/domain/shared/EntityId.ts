@@ -15,8 +15,8 @@ export abstract class EntityId {
     return this.value;
   }
 
-  equals(outro: EntityId): boolean {
-    return this.value === outro.value;
+  equals(other: EntityId): boolean {
+    return this.value === other.value;
   }
 
   toString(): string {
