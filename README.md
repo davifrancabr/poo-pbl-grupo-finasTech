@@ -21,7 +21,7 @@ Usamos html, css, bootstrap 4, javascript, TypeScript, SCSS, Stylus, Less.
 
 Para rodar o aplicativo, entre na raiz do backend/ e rode: npm run start
 
----
+------
 
 🔑 Acesso ao Sistema (Ambiente de Teste)
 O projeto conta com uma lista fixa de usuários pré-cadastrados para fins de teste. Para acessar a aplicação, basta navegar até a tela de login e utilizar uma das credenciais abaixo:
