@@ -5,6 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch ./src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
     "format": "prettier --write"
   },
   "devDependencies": {
@@ -28,7 +33,9 @@
     "typescript": "6.0.3"
   },
   "dependencies": {
+    "@fastify/cors": "^11.2.0",
     "drizzle-orm": "^0.45.2",
+    "fastify": "^5.8.5",
     "hono": "^4.12.23",
     "pg": "^8.21.0",
     "postgres": "^3.4.9",
