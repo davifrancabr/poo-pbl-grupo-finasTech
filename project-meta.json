@@ -1,0 +1,12 @@
+{
+  "curso": "Ciencias da Computação",
+  "disciplina": "Projeto de programação",
+  "tema_escolhido": "10.Aplicativo de Finanças Coletivas para Repúblicas ou Grupos de Viagem",
+  "linguagem": "Javascript e typescript",
+  "gerenciador_dependencias": "NPM",
+  "integrantes": [
+    {"nome": "Gustavo William Dos Santos", "github_username": "Gustavo-William137"},
+    {"nome": "Davi Cavalcante França", "github_username": "davifrancabr"},
+    {"nome": "Lívia Da Silva Texeira", "github_username": "Livia-Teixeira"}
+  ]
+}
