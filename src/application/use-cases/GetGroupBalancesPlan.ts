@@ -1,6 +1,6 @@
-import { BalanceCalculator } from '@/domain/clearing/BalanceCalculator';
-import type { MemberBalance } from '@/domain/clearing/MemberBalance';
-import { GroupId } from '@/domain/group/GroupId';
+import { BalanceCalculator } from '../../domain/clearing/BalanceCalculator';
+import type { MemberBalance } from '../../domain/clearing/MemberBalance';
+import { GroupId } from '../../domain/group/GroupId';
 import type { ExpenseRepository } from '../ports/ExpenseRepository';
 import type { GroupRepository } from '../ports/GroupRepository';
 

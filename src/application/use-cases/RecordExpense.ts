@@ -1,13 +1,13 @@
-import { Expense } from '@/domain/expenses/Expense';
-import { ExpenseSplitCalculator } from '@/domain/expenses/ExpenseSplitCalculator';
+import { Expense } from '../../domain/expenses/Expense';
+import { ExpenseSplitCalculator } from '../../domain/expenses/ExpenseSplitCalculator';
 import {
   EqualSplitStrategy,
   FixedAmountSplitStrategy,
   PercentageSplitStrategy
-} from '@/domain/expenses/SplitStrategy';
-import { GroupId } from '@/domain/group/GroupId';
-import { MemberId } from '@/domain/group/MemberId';
-import { Money } from '@/domain/shared/Money';
+} from '../../domain/expenses/SplitStrategy';
+import { GroupId } from '../../domain/group/GroupId';
+import { MemberId } from '../../domain/group/MemberId';
+import { Money } from '../../domain/shared/Money';
 import type { ExpenseRepository } from '../ports/ExpenseRepository';
 import type { GroupRepository } from '../ports/GroupRepository';
 
@@ -16,12 +16,12 @@ export type SplitType = 'equal' | 'percentage' | 'fixed';
 export interface RecordExpenseInput {
   groupId: string;
   payerId: string;
-  amount: number;
+  amount: string;
   description: string;
   splitType: SplitType;
   participantsIds: string[];
   percentages?: Record<string, number>;
-  fixedAmounts?: Record<string, number>;
+  fixedAmounts?: Record<string, string>;
 }
 
 export class RecordExpense {

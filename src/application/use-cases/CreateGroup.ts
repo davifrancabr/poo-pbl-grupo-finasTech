@@ -1,5 +1,5 @@
-import { Group } from '@/domain/group/Group';
-import { Currency } from '@/domain/shared/Currency';
+import { Group } from '../../domain/group/Group';
+import { Currency } from '../../domain/shared/Currency';
 import type { GroupRepository } from '../ports/GroupRepository';
 
 export class CreateGroup {

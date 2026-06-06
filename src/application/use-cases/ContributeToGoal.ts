@@ -1,6 +1,6 @@
-import { MemberId } from '@/domain/group/MemberId';
-import { GoalId } from '@/domain/savings/GoalId';
-import { Money } from '@/domain/shared/Money';
+import { MemberId } from '../../domain/group/MemberId';
+import { GoalId } from '../../domain/savings/GoalId';
+import { Money } from '../../domain/shared/Money';
 import type { GroupRepository } from '../ports/GroupRepository';
 import type { SavingsGoalRepository } from '../ports/SavingsGoalRepository';
 
@@ -13,7 +13,7 @@ export class ContributeToGoal {
   async execute(
     goalId: string,
     memberId: string,
-    amount: number
+    amount: string
   ): Promise<void> {
     const goal = await this.goalRepo.findById(GoalId.create(goalId));
     if (!goal) throw new Error('Meta não encontrada.');

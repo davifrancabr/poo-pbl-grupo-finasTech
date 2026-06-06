@@ -24,7 +24,7 @@ export class EqualSplitStrategy extends SplitStrategy {
     const remainder = total.subtract(sum);
 
     if (!remainder.isZero() && allocations.length > 0) {
-      const last = allocations.at(-1);
+      const last = allocations[allocations.length - 1];
       allocations[allocations.length - 1] = SplitAllocation.create(
         last?.getMemberId()!,
         last?.getShare().add(remainder)!
@@ -92,7 +92,7 @@ export class PercentageSplitStrategy extends SplitStrategy {
 
     const remainder = total.subtract(sum);
     if (!remainder.isZero() && allocations.length > 0) {
-      const last = allocations.at(-1);
+      const last = allocations[allocations.length - 1];
       allocations[allocations.length - 1] = SplitAllocation.create(
         last?.getMemberId()!,
         last?.getShare().add(remainder)!

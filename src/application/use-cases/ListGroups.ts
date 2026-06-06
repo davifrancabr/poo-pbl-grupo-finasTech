@@ -1,4 +1,4 @@
-import type { Group } from '@/domain/group/Group';
+import type { Group } from '../../domain/group/Group';
 import type { GroupRepository } from '../ports/GroupRepository';
 
 export class ListGroups {

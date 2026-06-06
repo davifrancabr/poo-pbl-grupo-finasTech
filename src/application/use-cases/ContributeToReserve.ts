@@ -1,6 +1,6 @@
-import { GroupId } from '@/domain/group/GroupId';
-import { MemberId } from '@/domain/group/MemberId';
-import { Money } from '@/domain/shared/Money';
+import { GroupId } from '../../domain/group/GroupId';
+import { MemberId } from '../../domain/group/MemberId';
+import { Money } from '../../domain/shared/Money';
 import type { GroupRepository } from '../ports/GroupRepository';
 
 export class ContributeToReserve {
@@ -9,7 +9,7 @@ export class ContributeToReserve {
   async execute(
     groupId: string,
     memberId: string,
-    amount: number,
+    amount: string,
     description: string
   ): Promise<void> {
     const group = await this.groupRepo.findById(GroupId.create(groupId));

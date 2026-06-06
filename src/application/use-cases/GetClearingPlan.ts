@@ -1,5 +1,5 @@
-import { ClearingService } from '@/domain/clearing/ClearingService';
-import type { Settlement } from '@/domain/clearing/Settlement';
+import { ClearingService } from '../../domain/clearing/ClearingService';
+import type { Settlement } from '../../domain/clearing/Settlement';
 import type { GetGroupBalances } from './GetGroupBalancesPlan';
 
 export class GetClearingPlan {

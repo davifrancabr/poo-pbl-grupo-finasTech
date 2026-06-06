@@ -1,4 +1,4 @@
-import { GroupId } from '@/domain/group/GroupId';
+import { GroupId } from '../../domain/group/GroupId';
 import type { ExpenseRepository } from '../ports/ExpenseRepository';
 import type { GroupRepository } from '../ports/GroupRepository';
 import type { SavingsGoalRepository } from '../ports/SavingsGoalRepository';

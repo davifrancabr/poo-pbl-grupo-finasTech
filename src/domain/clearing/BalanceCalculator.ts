@@ -12,15 +12,15 @@ export class BalanceCalculator {
     reserveTransactions: readonly ReserveTransaction[],
     currency: Currency
   ) {
-    const balances = new Map<string, number>();
+    const balances = new Map<string, bigint>();
 
     for (const id of memberIds) {
-      balances.set(id.getValue(), 0);
+      balances.set(id.getValue(), 0n);
     }
 
     for (const expense of expenses) {
       const payerId = expense.getPayerId().getValue();
-      const payerBalance = balances.get(payerId) ?? 0;
+      const payerBalance = balances.get(payerId) ?? 0n;
 
       balances.set(
         payerId,
@@ -29,7 +29,7 @@ export class BalanceCalculator {
 
       for (const split of expense.getSplits()) {
         const memberId = split.getMemberId().getValue();
-        const current = balances.get(memberId) ?? 0;
+        const current = balances.get(memberId) ?? 0n;
 
         balances.set(memberId, current - split.getShare().getAmount());
       }
@@ -37,7 +37,7 @@ export class BalanceCalculator {
 
     for (const tx of reserveTransactions) {
       const memberId = tx.memberId.getValue();
-      const current = balances.get(memberId) ?? 0;
+      const current = balances.get(memberId) ?? 0n;
 
       const delta =
         tx.type === 'contribution'
@@ -48,7 +48,7 @@ export class BalanceCalculator {
     }
 
     return memberIds.map(id => {
-      const minor = balances.get(id.getValue()) ?? 0;
+      const minor = balances.get(id.getValue()) ?? 0n;
 
       return new MemberBalance(id, Money.fromSignedMinorUnit(minor, currency));
     });

@@ -3,32 +3,39 @@ import { DomainError } from './DomainError';
 
 export class Money {
   private constructor(
-    private readonly amount: number,
+    private readonly amount: bigint,
     private readonly currency: Currency
   ) {}
 
   static zero(currency: Currency): Money {
-    return new Money(0, currency);
+    return new Money(0n, currency);
   }
 
-  static fromMinorUnit(amount: number, currency: Currency): Money {
-    if (amount < 0) throw new TypeError('Valor não pode ser negativo.');
+  static fromMinorUnit(amount: bigint, currency: Currency): Money {
+    if (amount < 0n) throw new TypeError('Valor não pode ser negativo.');
 
     return new Money(amount, currency);
   }
 
-  static fromSignedMinorUnit(amount: number, currency: Currency): Money {
+  static fromSignedMinorUnit(amount: bigint, currency: Currency): Money {
     return new Money(amount, currency);
   }
 
-  static fromDecimal(amount: number, currency: Currency): Money {
-    const negative = amount < 0;
-    return negative
-      ? new Money(amount, currency).negate()
-      : new Money(amount, currency);
+  static fromDecimal(value: string, currency: Currency): Money {
+    const trimmed = value.trim().replace(',', '.');
+    if (!/^-?\d+(\.\d{1,2})?$/.test(trimmed)) {
+      throw new DomainError(`Invalid monetary value: ${value}`);
+    }
+    const negative = trimmed.startsWith('-');
+    const normalized = negative ? trimmed.slice(1) : trimmed;
+    const [whole, fraction = ''] = normalized.split('.');
+    const paddedFraction = fraction.padEnd(2, '0').slice(0, 2);
+    const minorUnits = BigInt(whole + paddedFraction);
+    const result = new Money(minorUnits, currency);
+    return negative ? result.negate() : result;
   }
 
-  getAmount(): number {
+  getAmount(): bigint {
     return this.amount;
   }
 
@@ -37,15 +44,15 @@ export class Money {
   }
 
   isZero(): boolean {
-    return this.amount === 0;
+    return this.amount === 0n;
   }
 
   isNegative(): boolean {
-    return this.amount < 0;
+    return this.amount < 0n;
   }
 
   isPositive(): boolean {
-    return this.amount > 0;
+    return this.amount > 0n;
   }
 
   negate(): Money {
@@ -53,7 +60,7 @@ export class Money {
   }
 
   abs(): Money {
-    return this.amount < 0 ? this.negate() : this;
+    return this.amount < 0n ? this.negate() : this;
   }
 
   add(other: Money): Money {
@@ -75,7 +82,7 @@ export class Money {
     const escala = Number(this.amount) * factor;
     const arredontado = Math.round(escala);
 
-    return new Money(arredontado, this.currency);
+    return new Money(BigInt(arredontado), this.currency);
   }
 
   divide(divisor: number): Money {
@@ -84,7 +91,7 @@ export class Money {
     const escala = Number(this.amount) / divisor;
     const arredondado = Math.round(escala);
 
-    return new Money(arredondado, this.currency);
+    return new Money(BigInt(arredondado), this.currency);
   }
 
   equals(other: Money): boolean {
@@ -104,7 +111,7 @@ export class Money {
   }
 
   toDecimalString(): string {
-    const negative = this.amount < 0;
+    const negative = this.amount < 0n;
     const abs = negative ? -this.amount : this.amount;
     const str = abs.toString().padStart(3, '0');
     const whole = str.slice(0, -2) || '0';

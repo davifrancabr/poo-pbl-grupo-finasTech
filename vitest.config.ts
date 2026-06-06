@@ -9,9 +9,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@domain': resolve(__dirname, 'src/domain'),
-      '@app': resolve(__dirname, 'src/application'),
-      '@infa': resolve(__dirname, 'src/infrastructure')
+      '@domain': resolve(__dirname, './src/domain'),
+      '@app': resolve(__dirname, './src/application'),
+      '@infra': resolve(__dirname, './src/infrastructure')
     }
   }
 });

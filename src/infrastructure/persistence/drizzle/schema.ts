@@ -1,7 +1,7 @@
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
+  bigint,
   index,
-  integer,
   pgTable,
   text,
   timestamp,
@@ -35,7 +35,7 @@ export const expenses = pgTable(
       .notNull()
       .references(() => groups.id, { onDelete: 'cascade' }),
     payerId: uuid('payerId').notNull(),
-    totalAmount: integer('totalAmount').notNull(),
+    totalAmount: bigint('totalAmount', { mode: 'bigint' }).notNull(),
     description: text('description').notNull(),
     occurredAt: timestamp('occurredAt').notNull().defaultNow()
   },
@@ -50,7 +50,7 @@ export const expenseSplits = pgTable(
       .notNull()
       .references(() => expenses.id, { onDelete: 'cascade' }),
     memberId: uuid('memberId').notNull(),
-    shareAmount: integer('shareAmount').notNull()
+    shareAmount: bigint('shareAmount', { mode: 'bigint' }).notNull()
   },
   t => [index('ExpenseSplit_expenseId_idx').on(t.expenseId)]
 );
@@ -63,7 +63,7 @@ export const reserveTransactions = pgTable(
       .notNull()
       .references(() => groups.id, { onDelete: 'cascade' }),
     memberId: uuid('memberId').notNull(),
-    amount: integer('amount').notNull(),
+    amount: bigint('amount', { mode: 'bigint' }).notNull(),
     type: text('type').notNull(),
     description: text('description').notNull(),
     occurredAt: timestamp('occurredAt').notNull().defaultNow()
@@ -79,8 +79,10 @@ export const savingsGoals = pgTable(
       .notNull()
       .references(() => groups.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
-    targetAmount: integer('targetAmount').notNull(),
-    currentAmount: integer('currentAmount').notNull().default(0),
+    targetAmount: bigint('targetAmount', { mode: 'bigint' }).notNull(),
+    currentAmount: bigint('currentAmount', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0`),
     deadline: timestamp('deadline')
   },
   t => [index('SavingsGoal_groupId_idx').on(t.groupId)]
@@ -94,7 +96,7 @@ export const goalContributions = pgTable(
       .notNull()
       .references(() => savingsGoals.id, { onDelete: 'cascade' }),
     memberId: uuid('memberId').notNull(),
-    amount: integer('amount').notNull(),
+    amount: bigint('amount', { mode: 'bigint' }).notNull(),
     contributedAt: timestamp('contributedAt').notNull().defaultNow()
   },
   t => [index('GoalContribution_goalId_idx').on(t.goalId)]

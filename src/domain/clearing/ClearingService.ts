@@ -80,12 +80,7 @@ export class ClearingService {
     const newCreditor = creditor.amount.subtract(amount);
     const newDebtor = debtor.amount.subtract(amount);
 
-    if (!newCreditor.isZero()) {
-      creditors[i] = { id: creditor.id, amount: newCreditor };
-    }
-
-    if (!newDebtor.isZero()) {
-      debtors[j] = { id: debtor.id, amount: newDebtor };
-    }
+    creditors[i] = { id: creditor.id, amount: newCreditor };
+    debtors[j] = { id: debtor.id, amount: newDebtor };
   }
 }
