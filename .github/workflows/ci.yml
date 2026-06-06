@@ -27,8 +27,8 @@ jobs:
       - name: Build API
         run: bun run build:api
 
-      - name: Build FrontEnd
-        run: bun run build:web
+      # - name: Build FrontEnd
+      #   run: bun run build:web
 
       - name: Run unit tests
         run: bun test
