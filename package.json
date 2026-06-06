@@ -4,12 +4,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --watch ./src/infrastructure/http/server.ts",
+    "build": "bun run build:domain && bun run build:api",
+    "build:domain": "tsc -p tsconfig.json --noEmit",
+    "build:api": "tsc -p tsconfig.build.json",
+    "dev:db": "bun --watch ./src/infrastructure/http/server.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "test": "vitest",
-    "test:bun": "vitest",
     "test:watch": "vitest --watch",
     "format": "prettier --write"
   },
@@ -28,6 +30,7 @@
     "eslint-plugin-prettier": "^5.5.6",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
+    "tsx": "^4.22.4",
     "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.8"
   },
