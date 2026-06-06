@@ -126,13 +126,32 @@ export const buildApp = () => {
       url: '/api/v1/groups/:id/members',
       schema: {
         body: z.object({
+          name: z.string().min(2)
+        }),
+        params: z.object({
+          id: z.uuidv4()
+        })
+      },
+      handler: async req => {
+        const { id } = req.params;
+        const member = await container.addMember.execute(id, req.body.name);
+
+        return { id: member.getId().getValue(), name: member.getName() };
+      }
+    });
+
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'POST',
+      url: '/api/v1/groups/:id/expenses',
+      schema: {
+        body: z.object({
           payerId: z.uuidv4(),
-          amount: z.number().int(),
+          amount: z.string(),
           description: z.string(),
           splitType: z.enum(['equal', 'percentage', 'fixed']),
           participantsIds: z.array(z.string()).min(1),
           percentages: z.record(z.string(), z.number()).optional(),
-          fixedAmounts: z.record(z.string(), z.number()).optional()
+          fixedAmounts: z.record(z.string(), z.string()).optional()
         }),
         params: z.object({
           id: z.uuidv4()
@@ -156,7 +175,7 @@ export const buildApp = () => {
       schema: {
         body: z.object({
           memberId: z.uuidv4(),
-          amount: z.number().int(),
+          amount: z.string(),
           description: z.string()
         }),
         params: z.object({
@@ -206,7 +225,7 @@ export const buildApp = () => {
         params: z.object({
           id: z.uuidv4(),
           name: z.string(),
-          amount: z.number().int()
+          amount: z.string()
         })
       },
       handler: async req => {
@@ -228,7 +247,7 @@ export const buildApp = () => {
       schema: {
         body: z.object({
           title: z.string(),
-          targetAmount: z.number().int(),
+          targetAmount: z.string(),
           deadline: z.date().optional()
         }),
         params: z.object({
@@ -255,7 +274,7 @@ export const buildApp = () => {
       schema: {
         body: z.object({
           memberId: z.uuidv4(),
-          amount: z.number().int()
+          amount: z.string()
         }),
         params: z.object({
           goalId: z.uuidv4()
