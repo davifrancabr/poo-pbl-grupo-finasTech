@@ -19,18 +19,21 @@ Usamos html, css, bootstrap 4, javascript, TypeScript, SCSS, Stylus, Less.
 
 ### Como executar o projeto?
 
-Para rodar o aplicativo, entre na raiz do backend/ e rode: npm run start
+Para rodar o aplicativo, entre na raiz do backend/ e rode:
 
-------
+```bash
+npm run build
+npm run start
+```
+
+---
 
 🔑 Acesso ao Sistema (Ambiente de Teste)
 O projeto conta com uma lista fixa de usuários pré-cadastrados para fins de teste. Para acessar a aplicação, basta navegar até a tela de login e utilizar uma das credenciais abaixo:
 
-| E-mail | Senha | Perfil |
-| :--- | :--- | :--- |
-| admin@finans.com | 123 | Administrador |
-| usuario@teste.com | abc | Usuário Padrão |
+| E-mail            | Senha | Perfil         |
+| :---------------- | :---- | :------------- |
+| admin@finans.com  | 123   | Administrador  |
+| usuario@teste.com | abc   | Usuário Padrão |
 
 📌 Nota de Desenvolvimento: Esses dados estão declarados estaticamente no código (const bancoUsuarios) dentro do arquivo de autenticação/login para simular o comportamento de validação de acesso. Ao inserir qualquer uma dessas combinações, o login será efetuado com sucesso.
-
-
