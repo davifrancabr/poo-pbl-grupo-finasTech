@@ -4,21 +4,21 @@ import { Currency } from '../../../src/domain/shared/Currency';
 import { DomainError } from '../../../src/domain/shared/DomainError';
 import { Money } from '../../../src/domain/shared/Money';
 
-describe('Group', () => {
-  it('creates a group with name', () => {
+describe('Grupos', () => {
+  it('Cria o grupo com nome.', () => {
     const group = Group.create('República Finas');
     expect(group.getName()).toBe('República Finas');
     expect(group.getMembers()).toHaveLength(0);
   });
 
-  it('adds members', () => {
+  it('Adiciona membros.', () => {
     const group = Group.create('Viagem SP');
     const member = group.addMember('Alice');
     expect(group.getMembers()).toHaveLength(1);
     expect(group.hasMembro(member.getId())).toBe(true);
   });
 
-  it('manages reserve fund contributions', () => {
+  it('Gerencia contribuições para o fundo de reserva.', () => {
     const group = Group.create('República');
     const alice = group.addMember('Alice');
     const amount = Money.fromDecimal('50.00', Currency.BRL);
@@ -26,7 +26,7 @@ describe('Group', () => {
     expect(group.getReserveFund().getBalance().equals(amount)).toBe(true);
   });
 
-  it('rejects withdrawal exceeding balance', () => {
+  it('Rejeita o saque excedente ao saldo.', () => {
     const group = Group.create('República');
     const alice = group.addMember('Alice');
     const amount = Money.fromDecimal('100.00', Currency.BRL);

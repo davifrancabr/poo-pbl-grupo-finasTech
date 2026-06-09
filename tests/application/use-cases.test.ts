@@ -11,7 +11,7 @@ import { InMemoryExpenseRepository } from '../../src/infrastructure/persistence/
 import { InMemoryGroupRepository } from '../../src/infrastructure/persistence/in-memory/InMemoryGroupRepository';
 import { InMemorySavingsGoalRepository } from '../../src/infrastructure/persistence/in-memory/InMemorySavingsGoalRepository';
 
-describe('Application use cases', () => {
+describe('Casos de usos', () => {
   let groupRepo: InMemoryGroupRepository;
   let expenseRepo: InMemoryExpenseRepository;
   let goalRepo: InMemorySavingsGoalRepository;
@@ -22,7 +22,7 @@ describe('Application use cases', () => {
     goalRepo = new InMemorySavingsGoalRepository();
   });
 
-  it('creates group and adds members', async () => {
+  it('Cria grupos e adiciona membros', async () => {
     const createGroup = new CreateGroup(groupRepo);
     const group = await createGroup.execute('República Finas');
     const addMember = new AddMemberToGroup(groupRepo);
@@ -32,7 +32,7 @@ describe('Application use cases', () => {
     expect(updated?.getMembers()).toHaveLength(2);
   });
 
-  it('records expense and calculates clearing', async () => {
+  it('Registra despesas e calcula a margem', async () => {
     const createGroup = new CreateGroup(groupRepo);
     const group = await createGroup.execute('Viagem');
     const addMember = new AddMemberToGroup(groupRepo);
@@ -58,7 +58,7 @@ describe('Application use cases', () => {
     expect(settlements.length).toBeGreaterThan(0);
   });
 
-  it('manages savings goals', async () => {
+  it('Gerencia as metas de poupança', async () => {
     const createGroup = new CreateGroup(groupRepo);
     const group = await createGroup.execute('Meta');
     const addMember = new AddMemberToGroup(groupRepo);
@@ -82,7 +82,7 @@ describe('Application use cases', () => {
     expect(goals[0]?.getProgressPercent()).toBe(20);
   });
 
-  it('contributes to reserve fund', async () => {
+  it('Contribuir para o fundo de reserva', async () => {
     const createGroup = new CreateGroup(groupRepo);
     const group = await createGroup.execute('Fundo');
     const addMember = new AddMemberToGroup(groupRepo);

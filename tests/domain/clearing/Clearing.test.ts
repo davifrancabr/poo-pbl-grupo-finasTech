@@ -8,13 +8,13 @@ import { Group } from '../../../src/domain/group/Group';
 import { Currency } from '../../../src/domain/shared/Currency';
 import { Money } from '../../../src/domain/shared/Money';
 
-describe('BalanceCalculator and ClearingService', () => {
+describe('BalanceCalculator e ClearingService', () => {
   const BRL = Currency.BRL;
   const calculator = new ExpenseSplitCalculator();
   const balanceCalc = new BalanceCalculator();
   const clearing = new ClearingService();
 
-  it('calculates who owes whom after equal split', () => {
+  it('Calcula quem deve quem apos a divisão igualitária', () => {
     const group = Group.create('Test');
     const alice = group.addMember('Alice');
     const bob = group.addMember('Bob');
@@ -44,7 +44,7 @@ describe('BalanceCalculator and ClearingService', () => {
     expect(settlements[0]?.getAmount().toDecimalString()).toBe('50.00');
   });
 
-  it('produces zero settlements when balanced', () => {
+  it('Produtos com zero liquidações quando balanceado.', () => {
     const group = Group.create('Test');
     const alice = group.addMember('Alice');
     const balances = balanceCalc.calculate([alice.getId()], [], [], BRL);

@@ -8,14 +8,14 @@ import { Currency } from '../../../src/domain/shared/Currency';
 import { DomainError } from '../../../src/domain/shared/DomainError';
 import { Money } from '../../../src/domain/shared/Money';
 
-describe('Expense and SplitStrategy', () => {
+describe('Despesa e Estrategia de divisão', () => {
   const BRL = Currency.BRL;
   const groupId = GroupId.create();
   const alice = MemberId.create();
   const bob = MemberId.create();
   const calculator = new ExpenseSplitCalculator();
 
-  it('splits equally between participants', () => {
+  it('Divide igualmente entre os participantes.', () => {
     const total = Money.fromDecimal('100.00', BRL);
     const splits = calculator.calculate(
       total,
@@ -27,7 +27,7 @@ describe('Expense and SplitStrategy', () => {
     expect(sum.equals(total)).toBe(true);
   });
 
-  it('creates expense with valid splits', () => {
+  it('Cria despesas com divisões válidas.', () => {
     const total = Money.fromDecimal('90.00', BRL);
     const splits = calculator.calculate(
       total,
@@ -39,7 +39,7 @@ describe('Expense and SplitStrategy', () => {
     expect(expense.getTotalAmount().equals(total)).toBe(true);
   });
 
-  it('rejects expense when splits do not sum to total', () => {
+  it('Rejeita despesas quando a divisão ultrapassa o total.', () => {
     const total = Money.fromDecimal('100.00', BRL);
     const wrongSplit = calculator.calculate(
       Money.fromDecimal('50.00', BRL),
