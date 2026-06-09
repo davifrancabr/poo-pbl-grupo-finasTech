@@ -1,82 +1,3 @@
-/*
-const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-
-function renderExpenses() {
-  const list = document.getElementById('expense-list');
-  const balances = document.getElementById('balances');
-
-  list.innerHTML = '';
-
-  const totals = {};
-
-  expenses.forEach(expense => {
-
-    if (!totals[expense.person]) {
-      totals[expense.person] = 0;
-    }
-
-    totals[expense.person] += Number(expense.amount);
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>${expense.description}</strong>
-      - R$ ${expense.amount}
-      (${expense.person})
-    `;
-
-    list.appendChild(li);
-  });
-
-  balances.innerHTML = '';
-
-  Object.keys(totals).forEach(person => {
-
-    const div = document.createElement('div');
-
-    div.innerHTML = `
-      <div style="
-        background:#f5f5f5;
-        padding:10px;
-        margin:10px 0;
-        border-radius:10px;
-      ">
-        <strong>${person}</strong>: R$ ${totals[person].toFixed(2)}
-      </div>
-    `;
-
-    balances.appendChild(div);
-  });
-
-  localStorage.setItem('expenses', JSON.stringify(expenses));
-}
-
-document.getElementById('expense-form')
-  .addEventListener('submit', function(event) {
-
-    event.preventDefault();
-
-    const description =
-      document.getElementById('description').value;
-
-    const amount =
-      document.getElementById('amount').value;
-
-    const person =
-      document.getElementById('person').value;
-
-    expenses.push({
-      description,
-      amount,
-      person
-    });
-
-    renderExpenses();
-
-    this.reset();
-});
-
-renderExpenses();
-*/
 
 // ==========================================
 // VALUE OBJECT: Dinheiro
@@ -250,7 +171,7 @@ document.getElementById('meta-valor').innerText = sistema.fundo.meta.formatar();
 expenseForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const desc = document.getElementById('description').value;
-    const valor = parseFloat(document.getElementById('amount').value);
+    const valor = Number.parseFloat(document.getElementById('amount').value);
     const pessoa = document.getElementById('person').value;
 
     sistema.adicionarDespesa(desc, valor, pessoa);
@@ -260,7 +181,7 @@ expenseForm.addEventListener('submit', function(e) {
 
 fundoForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const valor = parseFloat(document.getElementById('fundo-quantia').value);
+    const valor = Number.parseFloat(document.getElementById('fundo-quantia').value);
     
     sistema.adicionarContribuicaoFundo(valor);
     fundoForm.reset();

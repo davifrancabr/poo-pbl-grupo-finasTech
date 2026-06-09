@@ -6,11 +6,11 @@ import { Currency } from '../../../src/domain/shared/Currency';
 import { DomainError } from '../../../src/domain/shared/DomainError';
 import { Money } from '../../../src/domain/shared/Money';
 
-describe('SavingsGoal', () => {
+describe('Meta de Poupança', () => {
   const groupId = GroupId.create();
   const memberId = MemberId.create();
 
-  it('creates a savings goal', () => {
+  it('Cria meta de poupança.', () => {
     const goal = SavingsGoal.create(
       groupId,
       'Viagem de formatura',
@@ -20,7 +20,7 @@ describe('SavingsGoal', () => {
     expect(goal.getProgressPercent()).toBe(0);
   });
 
-  it('tracks contributions', () => {
+  it('Rastreia as contribuições.', () => {
     const goal = SavingsGoal.create(
       groupId,
       'Reserva',
@@ -31,7 +31,7 @@ describe('SavingsGoal', () => {
     expect(goal.getProgressPercent()).toBe(25);
   });
 
-  it('marks goal as achieved', () => {
+  it('Marca a meta como concluída.', () => {
     const goal = SavingsGoal.create(
       groupId,
       'Meta',
@@ -41,7 +41,7 @@ describe('SavingsGoal', () => {
     expect(goal.isAchieved()).toBe(true);
   });
 
-  it('rejects non-positive contributions', () => {
+  it('Rejeita contribuições negativas.', () => {
     const goal = SavingsGoal.create(
       groupId,
       'Meta',
