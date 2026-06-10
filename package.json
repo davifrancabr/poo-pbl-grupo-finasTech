@@ -11,12 +11,14 @@
     "dev": "concurrently \"bun --watch ./src/infrastructure/http/server.ts\" \"bun --watch ./src/presentation/main.html\"",
     "dev:api": "bun --watch ./src/infrastructure/http/server.ts",
     "dev:web": "bun --watch ./src/presentation/main.html",
+    "build": "tsc -p tsconfig.build.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "format": "prettier --write",
+    "type-check": "tsc -p tsconfig.json --noEmit",
     "postinstall": "drizzle-kit generate"
   },
   "devDependencies": {

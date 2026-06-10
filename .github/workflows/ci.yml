@@ -22,13 +22,10 @@ jobs:
         run: bun ci
 
       - name: Typecheck domain and API
-        run: bun run build:domain
+        run: bun run type-check
 
       - name: Build API
-        run: bun run build:api
-
-      # - name: Build FrontEnd
-      #   run: bun run build:web
+        run: bun run build
 
       - name: Run unit tests
         run: bun test
