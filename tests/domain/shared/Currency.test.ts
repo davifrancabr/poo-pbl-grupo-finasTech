@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { Currency } from '../../../src/domain/shared/Currency';
 
-describe('Currency', () => {
-  it('creates from valid code', () => {
+describe('Moeda', () => {
+  it('Cria moeda após validar.', () => {
     const currency = Currency.fromCode('brl');
     expect(currency.getCode()).toBe('BRL');
   });
 
-  it('has predefined currencies', () => {
+  it('Tem moedas predefinidas', () => {
     expect(Currency.BRL.getCode()).toBe('BRL');
     expect(Currency.USD.getCode()).toBe('USD');
   });
 
-  it('throws on invalid code', () => {
+  it('Gera um erro em caso de código inválido.', () => {
     expect(() => Currency.fromCode('INVALID')).toThrow();
   });
 });

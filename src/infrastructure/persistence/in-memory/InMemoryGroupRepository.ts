@@ -1,5 +1,5 @@
 import type { GroupRepository } from '@/application/ports/GroupRepository.ts';
-import type { Group } from '@/domain/group/Group.ts';
+import type { Group } from '@/domain/group/Group';
 import type { GroupId } from '@/domain/group/GroupId';
 
 export class InMemoryGroupRepository implements GroupRepository {

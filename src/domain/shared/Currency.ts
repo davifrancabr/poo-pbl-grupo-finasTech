@@ -3,6 +3,7 @@ export class Currency {
 
   static readonly BRL = new Currency('BRL');
   static readonly USD = new Currency('USD');
+  static readonly EUR = new Currency('EUR');
 
   static fromCode(type: string): Currency {
     const normalizado = type.toUpperCase().trim();

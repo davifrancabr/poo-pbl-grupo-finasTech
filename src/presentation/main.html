@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinasTech — Finanças Coletivas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
+
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">Finas<span>Tech</span></div>
+        <div class="sidebar-section-label">Grupos</div>
+        <div class="group-list" id="groupList">
+          <div class="loading-row"><div class="spinner"></div></div>
+        </div>
+        <button class="btn-new-group" onclick="openModal('modalNewGroup')">
+          <span style="font-size: 18px">+</span> Novo grupo
+        </button>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <button class="hamburger" onclick="toggleSidebar()">
+              <span></span><span></span><span></span>
+            </button>
+            <span class="topbar-title" id="topbarTitle">FinasTech</span>
+          </div>
+          <div class="topbar-actions" id="topbarActions"></div>
+        </header>
+
+        <div class="content" id="mainContent">
+          <div class="empty-state">
+            <div class="empty-icon">💸</div>
+            <h2>Bem-vindo ao FinasTech</h2>
+            <p>
+              Selecione um grupo na barra lateral ou crie um novo para começar a
+              gerenciar gastos coletivos.
+            </p>
+            <button
+              class="btn btn-primary"
+              onclick="openModal('modalNewGroup')">
+              + Criar grupo
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="modalNewGroup">
+      <div class="modal">
+        <div class="modal-title">✦ Criar novo grupo</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>NOME DO GRUPO</label>
+            <input id="newGroupName" placeholder="Ex: Viagem a Fortaleza" />
+          </div>
+          <div class="form-group" style="max-width: 130px">
+            <label>MOEDA</label>
+            <select id="newGroupCurrency">
+              <option value="BRL">BRL — R$</option>
+              <option value="USD">USD — $</option>
+              <option value="EUR">EUR — €</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('modalNewGroup')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitNewGroup()">
+            Criar grupo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalAddMember">
+      <div class="modal">
+        <div class="modal-title">👤 Adicionar membro</div>
+        <div class="form-group">
+          <label>NOME</label>
+          <input id="newMemberName" placeholder="Ex: Maria Silva" />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('modalAddMember')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitAddMember()">
+            Adicionar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalAddExpense">
+      <div class="modal" style="max-width: 580px">
+        <div class="modal-title">🧾 Nova despesa</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>DESCRIÇÃO</label>
+            <input id="expDesc" placeholder="Ex: Almoço no restaurante" />
+          </div>
+          <div class="form-group" style="max-width: 140px">
+            <label>VALOR</label>
+            <input
+              id="expAmount"
+              type="number"
+              step="0.01"
+              placeholder="0.00" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>QUEM PAGOU</label>
+          <select id="expPayer"></select>
+        </div>
+        <label style="margin-bottom: 8px; display: block">DIVISÃO</label>
+        <div class="split-selector">
+          <button
+            class="split-btn active"
+            data-split="equal"
+            onclick="selectSplit(this)">
+            Igualmente
+          </button>
+          <button
+            class="split-btn"
+            data-split="percentage"
+            onclick="selectSplit(this)">
+            Porcentagem
+          </button>
+          <button
+            class="split-btn"
+            data-split="fixed"
+            onclick="selectSplit(this)">
+            Valor fixo
+          </button>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>PARTICIPANTES</label>
+          <div class="participant-checks" id="expParticipants"></div>
+        </div>
+        <div id="splitDetails"></div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('modalAddExpense')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitExpense()">
+            Registrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalReserve">
+      <div class="modal">
+        <div class="modal-title">🏦 Contribuir para reserva</div>
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>MEMBRO</label>
+          <select id="reserveMember"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>VALOR</label>
+            <input
+              id="reserveAmount"
+              type="number"
+              step="0.01"
+              placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>DESCRIÇÃO</label>
+            <input id="reserveDesc" placeholder="Ex: Contribuição mensal" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('modalReserve')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitReserve()">
+            Contribuir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalGoal">
+      <div class="modal">
+        <div class="modal-title">🎯 Nova meta de poupança</div>
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>TÍTULO</label>
+          <input id="goalTitle" placeholder="Ex: Viagem a Paris" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>VALOR ALVO</label>
+            <input
+              id="goalAmount"
+              type="number"
+              step="0.01"
+              placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>PRAZO (opcional)</label>
+            <input id="goalDeadline" type="date" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('modalGoal')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitGoal()">
+            Criar meta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalContributeGoal">
+      <div class="modal">
+        <div class="modal-title">💰 Contribuir para meta</div>
+        <input type="hidden" id="contributeGoalId" />
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>MEMBRO</label>
+          <select id="contributeGoalMember"></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px">
+          <label>VALOR</label>
+          <input
+            id="contributeGoalAmount"
+            type="number"
+            step="0.01"
+            placeholder="0.00" />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-secondary"
+            onclick="closeModal('modalContributeGoal')">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="submitContributeGoal()">
+            Contribuir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API = 'http://localhost:3001/api/v1';
+
+      let currentGroupId = null;
+      let currentDashboard = null;
+      let currentSplitType = 'equal';
+
+      async function api(path, opts = {}) {
+        const res = await fetch(API + path, {
+          headers: { 'Content-Type': 'application/json' },
+          ...opts,
+          body: opts.body ? JSON.stringify(opts.body) : undefined
+        });
+        if (!res.ok) {
+          const err = await res
+            .json()
+            .catch(() => ({ message: 'Erro desconhecido' }));
+          throw new Error(err.message || `HTTP ${res.status}`);
+        }
+        return res.json();
+      }
+
+      function toast(msg, type = 'info') {
+        const icons = { success: '✓', error: '✕', info: 'ℹ' };
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+      }
+
+      function openModal(id) {
+        document.getElementById(id).classList.add('open');
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+      }
+      document.querySelectorAll('.modal-overlay').forEach(o => {
+        o.addEventListener('click', e => {
+          if (e.target === o) o.classList.remove('open');
+        });
+      });
+
+      function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('overlayBg').classList.toggle('open');
+      }
+      function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('overlayBg').classList.remove('open');
+      }
+
+      function fmtMoney(value, currency = 'BRL') {
+        const num = Number.parseFloat(value) || 0;
+        return num.toLocaleString('pt-BR', { style: 'currency', currency });
+      }
+      function currencySymbol(code) {
+        return { BRL: 'R$', USD: '$', EUR: '€' }[code] || code;
+      }
+
+      async function loadGroups() {
+        const list = document.getElementById('groupList');
+        try {
+          const groups = await api('/groups');
+          if (!groups.length) {
+            list.innerHTML = `<p class="text-muted text-sm" style="padding:8px 12px;">Nenhum grupo ainda</p>`;
+            return;
+          }
+          list.innerHTML = groups
+            .map(
+              g => `
+      <button class="group-item ${g.id === currentGroupId ? 'active' : ''}" onclick="selectGroup('${g.id}','${g.name}')">
+        <div class="avatar">${g.name.charAt(0).toUpperCase()}</div>
+        <span class="group-item-name">${g.name}</span>
+        <span class="group-currency">${g.currency}</span>
+      </button>
+    `
+            )
+            .join('');
+        } catch (e) {
+          list.innerHTML = `<p class="text-muted text-sm" style="padding:8px 12px;">⚠ Servidor offline</p>`;
+        }
+      }
+
+      async function selectGroup(id, name) {
+        currentGroupId = id;
+        document.getElementById('topbarTitle').textContent = name;
+        closeSidebar();
+
+        document.querySelectorAll('.group-item').forEach(el => {
+          el.classList.toggle(
+            'active',
+            el.onclick.toString().includes(`'${id}'`)
+          );
+        });
+
+        renderLoading();
+        try {
+          currentDashboard = await api(`/groups/${id}`);
+          renderDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+          renderError(e.message);
+        }
+      }
+
+      function renderLoading() {
+        document.getElementById('mainContent').innerHTML =
+          `<div class="loading-row"><div class="spinner"></div></div>`;
+        document.getElementById('topbarActions').innerHTML = '';
+      }
+
+      function renderError(msg) {
+        document.getElementById('mainContent').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">⚠️</div>
+      <h2>Erro ao carregar</h2>
+      <p>${msg}</p>
+    </div>`;
+      }
+
+      function renderDashboard() {
+        const d = currentDashboard;
+        const g = d.group;
+        const currency = g.currency;
+
+        document.getElementById('topbarActions').innerHTML = `
+    <button class="btn btn-secondary btn-sm" onclick="openAddMemberModal()">+ Membro</button>
+    <button class="btn btn-secondary btn-sm" onclick="openReserveModal()">🏦 Reserva</button>
+    <button class="btn btn-primary btn-sm" onclick="openExpenseModal()">+ Despesa</button>
+  `;
+
+        const totalSpent = d.expenses.reduce(
+          (s, e) => s + Number.parseFloat(e.total),
+          0
+        );
+        const creditors = d.balances.filter(b => b.isCreditor);
+        const debtors = d.balances.filter(b => b.isDebtor);
+
+        const html = `
+    
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total gasto</div>
+        <div class="stat-value">${fmtMoney(totalSpent, currency)}</div>
+        <div class="stat-meta">${d.expenses.length} despesa(s)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Membros</div>
+        <div class="stat-value">${g.members.length}</div>
+        <div class="stat-meta">${creditors.length} a receber · ${debtors.length} devendo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Fundo de reserva</div>
+        <div class="stat-value positive">${fmtMoney(g.reserveBalance, currency)}</div>
+        <div class="stat-meta">Saldo atual</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Acertos pendentes</div>
+        <div class="stat-value ${d.settlements.length ? 'negative' : 'positive'}">${d.settlements.length}</div>
+        <div class="stat-meta">${d.settlements.length ? 'pagamentos a fazer' : 'tudo certo!'}</div>
+      </div>
+    </div>
+
+    
+    <div class="card">
+      <div class="section-head">
+        <span class="section-title">👥 Membros</span>
+        <button class="btn btn-secondary btn-sm" onclick="openAddMemberModal()">+ Adicionar</button>
+      </div>
+      <div class="member-chips">
+        ${
+          g.members.length
+            ? g.members
+                .map(
+                  m => `
+          <div class="member-chip">
+            <div class="avatar">${m.name.charAt(0).toUpperCase()}</div>
+            <span>${m.name}</span>
+          </div>
+        `
+                )
+                .join('')
+            : '<span class="text-muted text-sm">Nenhum membro ainda.</span>'
+        }
+      </div>
+    </div>
+
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'tabExpenses')">Despesas</button>
+      <button class="tab-btn" onclick="switchTab(this,'tabBalances')">Saldos</button>
+      <button class="tab-btn" onclick="switchTab(this,'tabClearing')">Acertos</button>
+      <button class="tab-btn" onclick="switchTab(this,'tabGoals')">Metas</button>
+    </div>
+
+    
+    <div class="tab-panel active" id="tabExpenses">
+      <div class="section-head">
+        <span class="section-title">🧾 Despesas</span>
+        <button class="btn btn-primary btn-sm" onclick="openExpenseModal()">+ Nova</button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        ${
+          d.expenses.length
+            ? `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Pago por</th>
+              <th>Total</th>
+              <th>Data</th>
+              <th>Divisão</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${d.expenses
+              .map(e => {
+                const payerName =
+                  g.members.find(m => m.id === e.payerId)?.name || e.payerId;
+                const date = new Date(e.occurredAt).toLocaleDateString('pt-BR');
+                return `
+                <tr>
+                  <td><strong>${e.description}</strong></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div class="avatar" style="width:22px;height:22px;font-size:9px;">${payerName.charAt(0)}</div>
+                      ${payerName}
+                    </div>
+                  </td>
+                  <td><span class="badge badge-blue">${fmtMoney(e.total, currency)}</span></td>
+                  <td class="text-muted text-sm">${date}</td>
+                  <td>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                      ${e.splits
+                        .map(s => {
+                          const sName =
+                            g.members.find(m => m.id === s.memberId)?.name ||
+                            '?';
+                          return `<span class="badge badge-gray">${sName}: ${fmtMoney(s.share, currency)}</span>`;
+                        })
+                        .join('')}
+                    </div>
+                  </td>
+                </tr>
+              `;
+              })
+              .join('')}
+          </tbody>
+        </table>`
+            : `
+        <div style="padding:32px;text-align:center;color:var(--muted);">
+          Nenhuma despesa registrada ainda.
+          <br><button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="openExpenseModal()">+ Registrar primeira despesa</button>
+        </div>`
+        }
+      </div>
+    </div>
+
+    
+    <div class="tab-panel" id="tabBalances">
+      <div class="section-title" style="margin-bottom:16px;">⚖️ Saldos individuais</div>
+      ${
+        d.balances.length
+          ? d.balances
+              .map(b => {
+                const val = Number.parseFloat(b.balance);
+                const isPos = val > 0;
+                const isNeg = val < 0;
+                const name =
+                  b.memberName ||
+                  g.members.find(m => m.id === b.memberId)?.name ||
+                  b.memberId;
+                return `
+          <div class="settlement-item">
+            <div class="avatar" style="width:36px;height:36px;font-size:13px;">${name.charAt(0).toUpperCase()}</div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px;">${name}</div>
+              <div class="text-muted text-sm">${isPos ? 'A receber' : isNeg ? 'Deve' : 'Zerado'}</div>
+            </div>
+            <span class="badge ${isPos ? 'badge-green' : isNeg ? 'badge-red' : 'badge-gray'}">
+              ${isPos ? '+' : ''}${fmtMoney(b.balance, currency)}
+            </span>
+          </div>`;
+              })
+              .join('')
+          : '<p class="text-muted">Sem dados de saldo.</p>'
+      }
+    </div>
+
+    
+    <div class="tab-panel" id="tabClearing">
+      <div class="section-title" style="margin-bottom:16px;">🔄 Plano de acerto</div>
+      ${
+        d.settlements.length
+          ? d.settlements
+              .map(s => {
+                const from =
+                  s.fromMemberName ||
+                  g.members.find(m => m.id === s.fromMemberId)?.name ||
+                  s.fromMemberId;
+                const to =
+                  s.toMemberName ||
+                  g.members.find(m => m.id === s.toMemberId)?.name ||
+                  s.toMemberId;
+                return `
+          <div class="settlement-item">
+            <div class="avatar" style="width:32px;height:32px;font-size:11px;">${from.charAt(0)}</div>
+            <div style="flex:1;font-size:14px;">
+              <strong>${from}</strong>
+              <span class="text-muted" style="margin:0 8px;">deve pagar</span>
+              <strong>${to}</strong>
+            </div>
+            <span class="badge badge-red">${fmtMoney(s.amount, currency)}</span>
+          </div>`;
+              })
+              .join('')
+          : `
+        <div class="settlement-item" style="justify-content:center;">
+          <span style="font-size:20px;">🎉</span>
+          <span class="text-muted">Tudo certo! Nenhum acerto necessário.</span>
+        </div>`
+      }
+    </div>
+
+    
+    <div class="tab-panel" id="tabGoals">
+      <div class="section-head">
+        <span class="section-title">🎯 Metas de poupança</span>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modalGoal')">+ Nova meta</button>
+      </div>
+      ${
+        d.goals.length
+          ? d.goals
+              .map(
+                goal => `
+        <div class="goal-card">
+          <div class="goal-header">
+            <div>
+              <div class="goal-title">${goal.title}</div>
+              ${goal.deadline ? `<div class="text-muted text-sm">Prazo: ${new Date(goal.deadline).toLocaleDateString('pt-BR')}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              ${goal.achieved ? '<span class="badge badge-green">✓ Concluída</span>' : ''}
+              <button class="btn btn-success btn-sm" onclick="openContributeGoalModal('${goal.id}')">Contribuir</button>
+            </div>
+          </div>
+          <div class="goal-amounts">
+            <strong>${fmtMoney(goal.current, currency)}</strong>
+            <span class="text-muted"> de </span>
+            <strong>${fmtMoney(goal.target, currency)}</strong>
+            <span class="text-muted"> (${goal.progressPercent}%)</span>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-bar" style="width:${goal.progressPercent}%"></div>
+          </div>
+        </div>
+      `
+              )
+              .join('')
+          : `
+        <div style="padding:32px;text-align:center;color:var(--muted);">
+          Nenhuma meta criada ainda.
+          <br><button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="openModal('modalGoal')">+ Criar primeira meta</button>
+        </div>`
+      }
+    </div>
+  `;
+
+        document.getElementById('mainContent').innerHTML = html;
+      }
+
+      function switchTab(btn, panelId) {
+        document
+          .querySelectorAll('.tab-btn')
+          .forEach(b => b.classList.remove('active'));
+        document
+          .querySelectorAll('.tab-panel')
+          .forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(panelId)?.classList.add('active');
+      }
+
+      async function submitNewGroup() {
+        const name = document.getElementById('newGroupName').value.trim();
+        const currency = document.getElementById('newGroupCurrency').value;
+        if (!name) return toast('Informe o nome do grupo.', 'error');
+        try {
+          const g = await api('/groups', {
+            method: 'POST',
+            body: { name, currency }
+          });
+          closeModal('modalNewGroup');
+          document.getElementById('newGroupName').value = '';
+          toast(`Grupo "${g.name}" criado!`, 'success');
+          await loadGroups();
+          selectGroup(g.id, g.name);
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      function openAddMemberModal() {
+        openModal('modalAddMember');
+      }
+      async function submitAddMember() {
+        const name = document.getElementById('newMemberName').value.trim();
+        if (!name) return toast('Informe o nome.', 'error');
+        try {
+          await api(`/groups/${currentGroupId}/members`, {
+            method: 'POST',
+            body: { name }
+          });
+          closeModal('modalAddMember');
+          document.getElementById('newMemberName').value = '';
+          toast(`Membro "${name}" adicionado!`, 'success');
+          await refreshDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      function openExpenseModal() {
+        const members = currentDashboard?.group?.members || [];
+        if (!members.length) {
+          toast('Adicione membros ao grupo primeiro.', 'error');
+          return;
+        }
+
+        document.getElementById('expPayer').innerHTML = members
+          .map(m => `<option value="${m.id}">${m.name}</option>`)
+          .join('');
+
+        document.getElementById('expParticipants').innerHTML = members
+          .map(
+            m => `
+    <label class="participant-check checked" id="pc-${m.id}">
+      <input type="checkbox" value="${m.id}" checked onchange="toggleParticipant(this,'${m.id}')">
+      ${m.name}
+    </label>
+  `
+          )
+          .join('');
+
+        currentSplitType = 'equal';
+        document
+          .querySelectorAll('.split-btn')
+          .forEach(b =>
+            b.classList.toggle('active', b.dataset.split === 'equal')
+          );
+        document.getElementById('splitDetails').innerHTML = '';
+        openModal('modalAddExpense');
+      }
+
+      function toggleParticipant(input, id) {
+        document
+          .getElementById('pc-' + id)
+          .classList.toggle('checked', input.checked);
+        renderSplitDetails();
+      }
+
+      function selectSplit(btn) {
+        document
+          .querySelectorAll('.split-btn')
+          .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSplitType = btn.dataset.split;
+        renderSplitDetails();
+      }
+
+      function renderSplitDetails() {
+        const container = document.getElementById('splitDetails');
+        if (currentSplitType === 'equal') {
+          container.innerHTML = '';
+          return;
+        }
+
+        const checked = [
+          ...document.querySelectorAll('#expParticipants input:checked')
+        ];
+        const members = currentDashboard?.group?.members || [];
+        container.innerHTML =
+          `<div class="form-row" style="flex-direction:column;gap:8px;">` +
+          checked
+            .map(c => {
+              const m = members.find(x => x.id === c.value);
+              return `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="width:120px;font-size:13px;">${m?.name}</span>
+          <input type="number" step="${currentSplitType === 'percentage' ? '1' : '0.01'}"
+            id="split-${c.value}" placeholder="${currentSplitType === 'percentage' ? '%' : '0.00'}"
+            style="flex:1;" />
+        </div>`;
+            })
+            .join('') +
+          `</div>`;
+      }
+
+      async function submitExpense() {
+        const desc = document.getElementById('expDesc').value.trim();
+        const amount = document.getElementById('expAmount').value;
+        const payerId = document.getElementById('expPayer').value;
+        const participantsIds = [
+          ...document.querySelectorAll('#expParticipants input:checked')
+        ].map(c => c.value);
+
+        if (!desc || !amount || !participantsIds.length)
+          return toast('Preencha todos os campos.', 'error');
+
+        const body = {
+          description: desc,
+          amount,
+          payerId,
+          splitType: currentSplitType,
+          participantsIds
+        };
+
+        if (currentSplitType === 'percentage') {
+          const percentages = {};
+          participantsIds.forEach(id => {
+            percentages[id] = Number.parseFloat(
+              document.getElementById('split-' + id)?.value || 0
+            );
+          });
+          body.percentages = percentages;
+        } else if (currentSplitType === 'fixed') {
+          const fixedAmounts = {};
+          participantsIds.forEach(id => {
+            fixedAmounts[id] =
+              document.getElementById('split-' + id)?.value || '0';
+          });
+          body.fixedAmounts = fixedAmounts;
+        }
+
+        try {
+          await api(`/groups/${currentGroupId}/expenses`, {
+            method: 'POST',
+            body
+          });
+          closeModal('modalAddExpense');
+          toast('Despesa registrada!', 'success');
+          await refreshDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      function openReserveModal() {
+        const members = currentDashboard?.group?.members || [];
+        document.getElementById('reserveMember').innerHTML = members
+          .map(m => `<option value="${m.id}">${m.name}</option>`)
+          .join('');
+        openModal('modalReserve');
+      }
+      async function submitReserve() {
+        const memberId = document.getElementById('reserveMember').value;
+        const amount = document.getElementById('reserveAmount').value;
+        const description =
+          document.getElementById('reserveDesc').value.trim() || 'Contribuição';
+        if (!amount) return toast('Informe o valor.', 'error');
+        try {
+          const result = await api(`/groups/${currentGroupId}/reserve`, {
+            method: 'POST',
+            body: { memberId, amount, description }
+          });
+          closeModal('modalReserve');
+          document.getElementById('reserveAmount').value = '';
+          document.getElementById('reserveDesc').value = '';
+          toast(
+            `Contribuição registrada! Saldo: ${fmtMoney(result.reserveBalance, currentDashboard.group.currency)}`,
+            'success'
+          );
+          await refreshDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      async function submitGoal() {
+        const title = document.getElementById('goalTitle').value.trim();
+        const targetAmount = document.getElementById('goalAmount').value;
+        const deadline = document.getElementById('goalDeadline').value;
+        if (!title || !targetAmount)
+          return toast('Preencha título e valor.', 'error');
+        try {
+          await api(`/groups/${currentGroupId}/goals`, {
+            method: 'POST',
+            body: {
+              title,
+              targetAmount,
+              ...(deadline ? { deadline: new Date(deadline) } : {})
+            }
+          });
+          closeModal('modalGoal');
+          document.getElementById('goalTitle').value = '';
+          document.getElementById('goalAmount').value = '';
+          document.getElementById('goalDeadline').value = '';
+          toast('Meta criada!', 'success');
+          await refreshDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      function openContributeGoalModal(goalId) {
+        document.getElementById('contributeGoalId').value = goalId;
+        const members = currentDashboard?.group?.members || [];
+        document.getElementById('contributeGoalMember').innerHTML = members
+          .map(m => `<option value="${m.id}">${m.name}</option>`)
+          .join('');
+        openModal('modalContributeGoal');
+      }
+      async function submitContributeGoal() {
+        const goalId = document.getElementById('contributeGoalId').value;
+        const memberId = document.getElementById('contributeGoalMember').value;
+        const amount = document.getElementById('contributeGoalAmount').value;
+        if (!amount) return toast('Informe o valor.', 'error');
+        try {
+          await api(`/goals/${goalId}/contribute`, {
+            method: 'POST',
+            body: { memberId, amount }
+          });
+          closeModal('modalContributeGoal');
+          document.getElementById('contributeGoalAmount').value = '';
+          toast('Contribuição registrada!', 'success');
+          await refreshDashboard();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      async function refreshDashboard() {
+        if (!currentGroupId) return;
+        try {
+          currentDashboard = await api(`/groups/${currentGroupId}`);
+          renderDashboard();
+          await loadGroups();
+        } catch (e) {
+          toast(e.message, 'error');
+        }
+      }
+
+      loadGroups();
+    </script>
+  </body>
+</html>
