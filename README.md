@@ -1,6 +1,6 @@
 # FinasTech
 
-Plataforma de **finanças coletivas** para grupos de pessoas — amigos, familiares, colegas de república, viajantes. Divida despesas de forma justa, acompanhe quem deve a quem, gerencie um fundo de reserva compartilhado e crie metas de poupança coletivas.
+Plataforma de **finanças coletivas** para grupos de pessoas — amigos, familiares, colegas, viajantes. Divida despesas de forma justa, acompanhe quem deve a quem, gerencie um fundo de reserva compartilhado e crie metas de poupança coletivas.
 
 ---
 
